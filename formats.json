@@ -1,0 +1,5 @@
+[
+  { "name": "csv", "mime": "text/csv", "extension": ".csv" },
+  { "name": "json", "mime": "application/json", "extension": ".json" },
+  { "name": "table", "mime": "text/plain", "extension": ".txt" }
+]
