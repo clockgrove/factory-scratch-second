@@ -19,6 +19,10 @@ test("lookup returns the registered entry", () => {
   assert.deepEqual(lookup("csv"), { name: "csv", mime: "text/csv", extension: ".csv" });
 });
 
+test("lookup returns the markdown entry", () => {
+  assert.deepEqual(lookup("markdown"), { name: "markdown", mime: "text/markdown", extension: ".md" });
+});
+
 test("lookup of an unregistered name throws UNKNOWN_FORMAT", () => {
   assert.throws(() => lookup("nope"), { code: "UNKNOWN_FORMAT" });
 });
