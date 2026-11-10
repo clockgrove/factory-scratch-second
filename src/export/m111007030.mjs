@@ -1,0 +1,4 @@
+// One tab-separated line of id, title and semicolon-joined tags per note.
+export function format(rows) {
+  return rows.map((r) => `${r.id}\t${r.title}\t${(r.tags || []).join(";")}`).join("\n");
+}
