@@ -1,11 +1,19 @@
 {
-  "name": "factory-scratch-second",
+  "name": "factory-scratch",
   "version": "0.1.0",
   "private": true,
-  "description": "Shared export-format registry for the notes CLI in clockgrove/factory-scratch.",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "description": "Scratch adopter for Factory 0.6: a tiny greeting library plus a Postgres-backed notes CLI with discovered commands, export formats and rules.",
   "scripts": {
-    "test": "node --test"
+    "check": "node --check src/*.mjs src/commands/*.mjs src/export/*.mjs src/rules/*.mjs test/*.mjs test/db/*.mjs",
+    "test": "node --test \"test/*.test.mjs\"",
+    "test:db": "node --test \"test/db/*.test.mjs\"",
+    "notes": "node src/cli.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
   }
 }

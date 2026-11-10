@@ -20,26 +20,26 @@ on:
     types: [completed]
   workflow_run: # CI on Actions finished (GitHub sends no check_suite event for a suite Actions made)
     workflows:
-      - CI
+      - Quality
     types: [completed]
 env:
-  FACTORY_HARNESS: claude # claude | codex | copilot
-  FACTORY_MODEL: claude-opus-5-5
-  FACTORY_SUBAGENT_MODEL: claude-sonnet-5-5
-  FACTORY_REVIEWER_MODEL: claude-fable-5-2
+  FACTORY_HARNESS: copilot # claude | codex | copilot
+  FACTORY_MODEL: ""
+  FACTORY_SUBAGENT_MODEL: ""
+  FACTORY_REVIEWER_MODEL: ""
   FACTORY_CREDENTIAL: plan # api; plan only for your own repository
-  FACTORY_MAX_CONCURRENT: 2
+  FACTORY_MAX_CONCURRENT: 5
   FACTORY_DAILY_USD: 25
   FACTORY_MAX_USD: 25
   FACTORY_TIMEOUT_MINUTES: 240 # under 360 on hosted runners; mirrored in timeout-minutes below
   FACTORY_AUTO_MERGE: "true"
   FACTORY_NOTIFY: kirkmarple-clockgrove#318831919 # login#id: the id pins the account (setup writes it)
-  FACTORY_SETUP: ""
+  FACTORY_SETUP: scripts/ci/setup.sh
   FACTORY_INSTALL: auto # auto (from the lockfile), none, or your own command
-  FACTORY_VALIDATION: ""
+  FACTORY_VALIDATION: npm run check, npm test, npm run test:db
   FACTORY_BUDGET_COMMAND: ""
-  FACTORY_PROTECTED_PATHS: ""
-  FACTORY_CI_CHECKS: ci
+  FACTORY_PROTECTED_PATHS: /scripts/ci/setup.sh
+  FACTORY_CI_CHECKS: quality
   FACTORY_NODE_VERSION: 22 # the Node.js your CI uses
 permissions: # the job token reads code and Actions; every write goes through the App's token
   contents: read
@@ -90,9 +90,9 @@ jobs:
   work:
     needs: dispatch
     if: needs.dispatch.outputs.count != '' && needs.dispatch.outputs.count != '0'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 240
-    strategy: { max-parallel: 2, fail-fast: false, matrix: { issue: "${{ fromJSON(needs.dispatch.outputs.issues) }}" } }
+    strategy: { max-parallel: 5, fail-fast: false, matrix: { issue: "${{ fromJSON(needs.dispatch.outputs.issues) }}" } }
     permissions: { contents: read, issues: write, actions: write } # actions: write for the tick at the end and triage's rerun of failed CI jobs
     concurrency: { group: "factory-${{ matrix.issue }}", cancel-in-progress: false } # one job per issue; a repeat waits, siblings keep running
     steps:
@@ -124,7 +124,7 @@ jobs:
     if: >-
       github.event_name == 'pull_request' && startsWith(github.head_ref, 'factory/') && github.event.pull_request.head.repo.full_name == github.repository &&
       ((github.event.action == 'labeled' && github.event.label.name == 'factory:review') || github.event.action == 'ready_for_review')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 240
     permissions: { contents: read, issues: write, actions: write } # actions: write here, for the tick below and triage's rerun of failed CI jobs
     concurrency: { group: "factory-review-${{ github.event.pull_request.number }}", cancel-in-progress: false }
