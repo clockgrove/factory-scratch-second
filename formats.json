@@ -3,6 +3,7 @@
   { "name": "json", "mime": "application/json", "extension": ".json" },
   { "name": "m111002210", "mime": "text/tab-separated-values", "extension": ".tsv" },
   { "name": "m111002300", "mime": "text/tab-separated-values", "extension": ".tsv" },
+  { "name": "m111003190", "mime": "text/tab-separated-values", "extension": ".tsv" },
   { "name": "markdown", "mime": "text/markdown", "extension": ".md" },
   { "name": "ndjson", "mime": "application/x-ndjson", "extension": ".ndjson" },
   { "name": "table", "mime": "text/plain", "extension": ".txt" },
