@@ -1,0 +1,9 @@
+CREATE EXTENSION IF NOT EXISTS vector SCHEMA public;
+CREATE TABLE IF NOT EXISTS notes (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL DEFAULT '',
+  tags TEXT[] NOT NULL DEFAULT '{}',
+  embedding vector(3),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);

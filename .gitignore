@@ -1,8 +1,1 @@
 node_modules/
-.env
-.env.*
-dist/
-coverage/
-.wrangler/
-/worlds/*/goldens/*.actual.json
-/.clockgrove/
