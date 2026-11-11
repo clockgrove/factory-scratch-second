@@ -10,13 +10,15 @@ function bad(message) {
 function parse(args) {
   let values;
   try {
-    ({ values } = parseArgs({ args, options: { min: { type: "string" } }, strict: true, allowPositionals: false }));
+    ({ values } = parseArgs({ args, options: { min: { type: "string", multiple: true } }, strict: true, allowPositionals: false }));
   } catch (e) {
     throw bad(e.message);
   }
   if (values.min === undefined) return { min: null };
-  const min = Number(values.min);
-  if (!/^\d+$/.test(values.min) || min < 1 || min > 2147483647) throw bad("--min must be an integer from 1 to 2147483647");
+  if (values.min.length > 1) throw bad("--min may be given only once");
+  const [text] = values.min;
+  const min = Number(text);
+  if (!/^\d+$/.test(text) || min < 1 || min > 2147483647) throw bad("--min must be an integer from 1 to 2147483647");
   return { min };
 }
 

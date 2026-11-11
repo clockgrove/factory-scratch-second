@@ -6,6 +6,8 @@ const cases = {
   "--min 0": ["--min", "0"],
   "--min x": ["--min", "x"],
   "a positional argument": ["extra"],
+  "--min x --min 1": ["--min", "x", "--min", "1"],
+  "--min 0 --min 1": ["--min", "0", "--min", "1"],
 };
 
 for (const [name, args] of Object.entries(cases)) {
