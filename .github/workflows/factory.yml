@@ -28,7 +28,7 @@ env:
   FACTORY_SUBAGENT_MODEL: ""
   FACTORY_REVIEWER_MODEL: ""
   FACTORY_CREDENTIAL: plan # api; plan only for your own repository
-  FACTORY_MAX_CONCURRENT: 5
+  FACTORY_MAX_CONCURRENT: 12
   FACTORY_DAILY_USD: 25
   FACTORY_MAX_USD: 25
   FACTORY_TIMEOUT_MINUTES: 240 # under 360 on hosted runners; mirrored in timeout-minutes below
