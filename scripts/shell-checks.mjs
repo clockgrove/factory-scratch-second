@@ -43,7 +43,7 @@ export async function gatewayLine(env, fetchImpl = fetch) {
 
 /** Returns the status line for one unauthenticated GET of the url, labelled with the host name. */
 export async function hostLine(label, url, fetchImpl = fetch) {
-  const status = await statusOf(url, { method: 'GET' }, fetchImpl);
+  const status = await statusOf(url, { method: 'GET', redirect: 'manual' }, fetchImpl);
   return status === null ? `${label} refused` : `${label} status ${status}`;
 }
 
@@ -52,7 +52,7 @@ export function presenceLines(env) {
   return KEYS.map((name) => `${name} ${env[name] ? 'present' : 'absent'}`);
 }
 
-/** Returns all seven output lines, running the requests sequentially and never throwing. */
+/** Returns all six output lines, running the requests sequentially and never throwing. */
 export async function shellChecks(env, fetchImpl = fetch) {
   const lines = [];
   const safe = async (fn, fallback) => {
@@ -73,7 +73,7 @@ export async function shellChecks(env, fetchImpl = fetch) {
   return lines;
 }
 
-/** Prints the seven lines and always exits with code 0. */
+/** Prints the six lines and always exits with code 0. */
 async function main() {
   const lines = await shellChecks(process.env);
   console.log(lines.join('\n'));
