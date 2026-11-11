@@ -23,7 +23,7 @@ on:
       - Quality
     types: [completed]
 env:
-  FACTORY_HARNESS: copilot # claude | codex | copilot
+  FACTORY_HARNESS: claude # claude | codex | copilot
   FACTORY_MODEL: ""
   FACTORY_SUBAGENT_MODEL: ""
   FACTORY_REVIEWER_MODEL: ""
