@@ -94,6 +94,7 @@ async function main() {
   try {
     const response = await fetch(`${url.replace(/\/$/, '')}/v1/images/edits`, {
       method: 'POST',
+      redirect: 'manual',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'openai/gpt-image-1-mini',
