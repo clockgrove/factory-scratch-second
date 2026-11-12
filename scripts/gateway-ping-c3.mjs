@@ -3,9 +3,12 @@ import { createGateway, generateText } from 'ai';
 const MODEL = 'nvidia/nemotron-3.5-lightning-free';
 const PROMPT = 'Say ok.';
 
-/** Prints one stderr line, with the key masked and newlines collapsed, and exits 1. */
+/** Prints one stderr line, with the key masked, ANSI colour escapes stripped and newlines collapsed, and exits 1. */
 function fail(message, key, status) {
-  let line = String(message).replace(/\s*\n\s*/g, ' ');
+  let line = String(message)
+    .replace(/\u001b\[[0-9;]*m/g, '')
+    .replace(/\s*\n\s*/g, ' ')
+    .trim();
   if (key) line = line.split(key).join('***');
   if (status) line += ` (HTTP ${status})`;
   process.stderr.write(`gateway-ping-c3: ${line}\n`);
@@ -27,7 +30,13 @@ async function main() {
     const cost = result.providerMetadata?.gateway?.cost;
     process.stdout.write(`text: ${result.text}\ncost: ${cost}\n`);
   } catch (err) {
-    const status = err?.statusCode ?? err?.cause?.statusCode ?? err?.lastError?.statusCode;
+    // ai 7.0.165 replaces a GatewayAuthenticationError (HTTP 401) with a plain Error of the
+    // same name that carries no statusCode, so its status is restored from the name.
+    const status =
+      err?.statusCode ??
+      err?.cause?.statusCode ??
+      err?.lastError?.statusCode ??
+      (err?.name === 'GatewayAuthenticationError' ? 401 : undefined);
     fail(err?.message ?? err, key, status);
   }
 }
