@@ -24,10 +24,10 @@ on:
       - Quality
     types: [completed]
 env:
-  FACTORY_HARNESS: copilot # claude | codex | copilot
-  FACTORY_MODEL: ""
-  FACTORY_SUBAGENT_MODEL: ""
-  FACTORY_REVIEWER_MODEL: ""
+  FACTORY_HARNESS: claude # claude | codex | copilot
+  FACTORY_MODEL: claude-opus-5-5
+  FACTORY_SUBAGENT_MODEL: claude-sonnet-5-5
+  FACTORY_REVIEWER_MODEL: claude-fable-5-2
   FACTORY_CREDENTIAL: plan # api; plan only for your own repository
   FACTORY_MAX_CONCURRENT: 5
   FACTORY_DAILY_USD: 25
@@ -131,7 +131,7 @@ jobs:
   work:
     needs: dispatch
     if: needs.dispatch.outputs.count != '' && needs.dispatch.outputs.count != '0'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 240
     strategy: { max-parallel: 5, fail-fast: false, matrix: { issue: "${{ fromJSON(needs.dispatch.outputs.issues) }}" } }
     permissions: { contents: read, issues: write, actions: write } # actions: write for the tick at the end and triage's rerun of failed CI jobs
@@ -167,7 +167,7 @@ jobs:
     if: >-
       github.event_name == 'pull_request' && startsWith(github.head_ref, 'factory/') && github.event.pull_request.head.repo.full_name == github.repository &&
       ((github.event.action == 'labeled' && github.event.label.name == 'factory:review') || (github.event.action == 'ready_for_review' && github.event.sender.type != 'Bot'))
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 240
     permissions: { contents: read, issues: write, actions: write } # actions: write here, for the tick below and triage's rerun of failed CI jobs
     concurrency: { group: "factory-review-${{ github.event.pull_request.number }}", cancel-in-progress: false }
