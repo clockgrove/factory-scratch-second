@@ -42,6 +42,7 @@ env:
   FACTORY_PROTECTED_PATHS: /scripts/ci/setup.sh
   FACTORY_CI_CHECKS: quality
   FACTORY_NODE_VERSION: 22 # the Node.js your CI uses
+  FACTORY_WORKER_SECRETS: AI_GATEWAY_API_KEY=WORKER_AI_GATEWAY_API_KEY # gate v0.9.23 relay leg: relayed, metered against max_usd
 permissions: # the job token reads code and Actions; every write goes through the App's token
   contents: read
   actions: read # the dispatcher sums today's usage artifacts; doctor lists the CI workflow's triggers
@@ -72,7 +73,7 @@ jobs:
       wake_at: "${{ steps.f.outputs.wake_at }}"
       wake_kind: "${{ steps.f.outputs.wake_kind }}"
     steps:
-      - uses: clockgrove/factory@f64e6cf05219801bd02ca983e772167fd060a727
+      - uses: clockgrove/factory@6b76ddac5eec8503b20473eb087dc147e318546e
         id: f
         with: { mode: dispatch, issue: "${{ inputs.issue }}", app_id: "${{ secrets.FACTORY_APP_ID }}", app_private_key: "${{ secrets.FACTORY_APP_PRIVATE_KEY }}" }
   queue-watch:
@@ -92,7 +93,7 @@ jobs:
     permissions: { contents: read, actions: write } # actions: write only for the dispatcher tick
     concurrency: { group: factory-queue-watch, cancel-in-progress: false }
     steps:
-      - uses: clockgrove/factory@f64e6cf05219801bd02ca983e772167fd060a727
+      - uses: clockgrove/factory@6b76ddac5eec8503b20473eb087dc147e318546e
         id: w
         with: { mode: watch, pr: "${{ needs.dispatch.outputs.queue_watch }}", app_id: "${{ secrets.FACTORY_APP_ID }}", app_private_key: "${{ secrets.FACTORY_APP_PRIVATE_KEY }}" }
       - name: Dispatch tick (a watched PR left the queue or stalled there, or the watch's time is up)
@@ -138,7 +139,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: clockgrove/factory@f64e6cf05219801bd02ca983e772167fd060a727
+      - uses: clockgrove/factory@6b76ddac5eec8503b20473eb087dc147e318546e
         id: f
         with:
           mode: work
@@ -173,7 +174,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: clockgrove/factory@f64e6cf05219801bd02ca983e772167fd060a727
+      - uses: clockgrove/factory@6b76ddac5eec8503b20473eb087dc147e318546e
         id: f
         with:
           mode: review
